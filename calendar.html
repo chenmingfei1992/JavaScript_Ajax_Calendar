@@ -1,0 +1,837 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset = "UTF-8">
+	<title>Calendar</title>	
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+
+
+
+<body>		
+	<h1>Welcome To My Calendar ! <br> </h1>
+   
+    <div id="user">
+    <!--let users to input name and password-->
+    <input type="text" id="username" placeholder="Username" /><br>
+    <input type="password" id="password" placeholder="Password" /><br>
+    <!--buttons for sign in and sign up and log out-->
+    <button type="button" id="logIn">Log In</button>
+    <button type="button" id="logOut">Log Out</button>
+    <button type="button" id="signUp">Sign Up</button><br><br><br>
+    </div>
+    
+    
+
+    <div id="calendarTable">   
+    <!--buttons for change months-->
+    <h1>Calendar</h1>
+    <button type="button" id="nextMonth">Next Month</button>
+    <button type="button" id="lastMonth">Last Month</button>
+    <table id='calendar'></table>
+    </div>
+
+    <div id="events">
+    <!--forms for input information of new events-->
+    <input type="text" id="event_title" placeholder="event_title" />
+    <input type="text" id="event_month" placeholder="event_month" />
+    <input type="text" id="event_day" placeholder="event_day" />
+    <input type="text" id="event_hour" placeholder="event_hour" />
+    <input type="text" id="event_minute" placeholder="event_minute" /><br>
+    <input type="text" id="event_category" placeholder="event_category" /><br>
+    <button type="button" id="addEvent">Add Event</button><br><br>
+    
+    <!--forms for editing events-->
+    <button type="button" id="showUpdateForms">Update ?</button><br>
+    <input type="text" id="old_title" placeholder="old_title" />
+    <input type="text" id="new_title" placeholder="new_title" />
+    <input type="text" id="new_month" placeholder="new_month" />
+    <input type="text" id="new_day" placeholder="new_day" />
+    <input type="text" id="new_hour" placeholder="new_hour" />
+    <input type="text" id="new_minute" placeholder="new_minute" /><br>
+    <input type="text" id="new_category" placeholder="new_category" /><br>
+    <button type="button" id="updateEvent">confirm update</button><br><br>
+
+    <!--forms for removing events-->
+    <input type="text" id="delete_title" placeholder="delete_title" />
+    <button type="button" id="deleteEvent">confirm delete</button><br><br>
+    
+    <button type="button" id="displayEvent">show events</button><br><br>
+
+    <!--forms for sharing events-->
+    <input type="text" id="share_user" placeholder="shareTo" />
+    <input type="text" id="share_title" placeholder="shareTitle" />
+    <button type="button" id="shareEvent">confirm share</button><br><br>
+    
+    <!--forms for sorting events by category-->
+    <input type="text" id="viewByCategory" placeholder="viewByCategory" />
+    <button type="button" id="filter">filter by category</button>
+    <button type="button" id="viewAll">view All</button><br><br>
+
+    <input type="text" id="group_member_1" placeholder="group_member_1" />
+    <input type="text" id="group_member_2" placeholder="group_member_2" />
+    <input type="text" id="group_member_3" placeholder="group_member_3" />
+    <input type="text" id="group_member_4" placeholder="group_member_4" />
+    <input type="text" id="group_member_5" placeholder="group_member_5" />
+    <button type="button" id="createGroupEvent">Create Group Event</button><br><br>
+    </div>
+
+
+
+    <script  type="text/javascript">
+
+
+ 
+            var currentMonth;
+             // initial state, hide the forms and buttons 
+            addEventListener("DOMContentLoaded",function(event){
+            document.getElementById("event_title").style.visibility = 'hidden';
+            document.getElementById("event_month").style.visibility = 'hidden';
+            document.getElementById("event_day").style.visibility = 'hidden';
+            document.getElementById("event_hour").style.visibility = 'hidden';
+            document.getElementById("event_minute").style.visibility = 'hidden';
+            document.getElementById("event_category").style.visibility = 'hidden';
+
+            document.getElementById("addEvent").style.visibility = 'hidden';
+
+            document.getElementById("showUpdateForms").style.visibility = 'hidden';
+
+            document.getElementById("old_title").style.visibility = 'hidden';
+            document.getElementById("new_title").style.visibility = 'hidden';
+            document.getElementById("new_month").style.visibility = 'hidden';
+            document.getElementById("new_day").style.visibility = 'hidden';
+            document.getElementById("new_hour").style.visibility = 'hidden';
+            document.getElementById("new_minute").style.visibility = 'hidden';
+            document.getElementById("new_category").style.visibility = 'hidden';
+
+            document.getElementById("updateEvent").style.visibility = 'hidden';
+            document.getElementById("delete_title").style.visibility = 'hidden';
+            document.getElementById("deleteEvent").style.visibility = 'hidden';
+            document.getElementById("displayEvent").style.visibility = 'hidden';
+            document.getElementById("share_user").style.visibility = 'hidden';
+            document.getElementById("share_title").style.visibility = 'hidden';
+            document.getElementById("shareEvent").style.visibility = 'hidden';
+            document.getElementById("viewByCategory").style.visibility = 'hidden';
+            document.getElementById("filter").style.visibility = 'hidden';
+            document.getElementById("viewAll").style.visibility = 'hidden';
+
+            document.getElementById("group_member_1").style.visibility = 'hidden';
+            document.getElementById("group_member_2").style.visibility = 'hidden';
+            document.getElementById("group_member_3").style.visibility = 'hidden';
+            document.getElementById("group_member_4").style.visibility = 'hidden';
+            document.getElementById("group_member_5").style.visibility = 'hidden';
+            document.getElementById("createGroupEvent").style.visibility = 'hidden';
+
+            document.getElementById("nextMonth").style.visibility = 'hidden';
+            document.getElementById("lastMonth").style.visibility = 'hidden';
+            document.getElementById("calendar").style.visibility = 'hidden';
+
+               }, false);
+
+    //connect button to functions
+    document.getElementById("logIn").addEventListener("click", logIn, false);
+    document.getElementById("logOut").addEventListener("click", logOut, false);
+    document.getElementById("signUp").addEventListener("click", signUp, false);
+    document.getElementById("addEvent").addEventListener("click", addEvent, false);
+    document.getElementById("showUpdateForms").addEventListener("click", showUpdateForms, false); 
+    document.getElementById("updateEvent").addEventListener("click", updateEvent, false);
+    document.getElementById("displayEvent").addEventListener("click", displayEvent, false);
+    document.getElementById("deleteEvent").addEventListener("click", deleteEvent, false);
+    document.getElementById("shareEvent").addEventListener("click", shareEvent, false);
+    document.getElementById("filter").addEventListener("click", categoryEvent, false);
+    document.getElementById("viewAll").addEventListener("click", displayEvent, false);
+    document.getElementById("createGroupEvent").addEventListener("click", groupEvent, false);
+    document.getElementById("nextMonth").addEventListener("click", nextMonth, false);
+    document.getElementById("lastMonth").addEventListener("click", lastMonth, false);
+    
+
+    var jsonData;
+    //login
+    function logIn(event){
+        var xmlHttp = new XMLHttpRequest();
+        // get the input values
+        var username = document.getElementById("username").value; 
+        var password = document.getElementById("password").value;
+        var dataString = "username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password);
+        xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/check.php", true); 
+        xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+        xmlHttp.addEventListener("load", function(event){
+        var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+        if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+                //if login successfully, show all the parts
+                document.getElementById("event_title").style.visibility = 'visible';
+                document.getElementById("event_month").style.visibility = 'visible';
+                document.getElementById("event_day").style.visibility = 'visible';
+                document.getElementById("event_hour").style.visibility = 'visible';
+                document.getElementById("event_minute").style.visibility = 'visible';
+                document.getElementById("event_category").style.visibility = 'visible';
+                
+                document.getElementById("addEvent").style.visibility ='visible';
+
+                document.getElementById("showUpdateForms").style.visibility = 'visible';
+
+                document.getElementById("old_title").style.visibility = 'hidden';
+                document.getElementById("new_title").style.visibility = 'hidden';
+                document.getElementById("new_month").style.visibility = 'hidden';
+                document.getElementById("new_day").style.visibility = 'hidden';
+                document.getElementById("new_hour").style.visibility = 'hidden';
+                document.getElementById("new_minute").style.visibility = 'hidden';
+                document.getElementById("new_category").style.visibility = 'hidden';
+
+                document.getElementById("updateEvent").style.visibility = 'hidden';
+                document.getElementById("delete_title").style.visibility = 'visible';
+                document.getElementById("deleteEvent").style.visibility = 'visible';
+                document.getElementById("displayEvent").style.visibility = 'visible';
+                document.getElementById("share_user").style.visibility ='visible';
+                document.getElementById("share_title").style.visibility = 'visible';
+                document.getElementById("shareEvent").style.visibility = 'visible';
+                document.getElementById("viewByCategory").style.visibility = 'visible';
+                document.getElementById("filter").style.visibility = 'visible';
+                document.getElementById("viewAll").style.visibility = 'visible';
+
+                document.getElementById("group_member_1").style.visibility = 'visible';
+                document.getElementById("group_member_2").style.visibility = 'visible';
+                document.getElementById("group_member_3").style.visibility = 'visible';
+                document.getElementById("group_member_4").style.visibility = 'visible';
+                document.getElementById("group_member_5").style.visibility = 'visible';
+                 document.getElementById("createGroupEvent").style.visibility = 'visible';
+
+                document.getElementById("nextMonth").style.visibility = 'visible';
+                document.getElementById("lastMonth").style.visibility = 'visible';
+                document.getElementById("calendar").style.visibility = 'visible';
+                currentMonth = new Month(2015,3);
+                CreateCalendar(currentMonth);
+                
+            }
+            else if(jsonData.blank){ 
+                alert("Please enter valid information");
+
+            }else{
+                alert(jsonData.message);
+            }
+        }, false); 
+     xmlHttp.send(dataString);  
+    }
+
+
+function signUp(event){
+
+    //get the inputs    
+    var username = document.getElementById("username").value; 
+    var password = document.getElementById("password").value; 
+
+    var dataString = "username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password);
+
+    var xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/register.php", true); 
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+    xmlHttp.addEventListener("load", function(event){
+        var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+        if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+        alert("You've been Signed up!");
+    }
+    }, false); // Bind the callback to the load event
+    xmlHttp.send(dataString); // Send the data
+}
+
+function logOut(){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/logOut.php", true);
+    xmlHttp.send(null);
+    alert("You have been loged out!");
+        // hidden all the parts
+        document.getElementById("event_title").style.visibility = 'hidden';
+        document.getElementById("event_month").style.visibility = 'hidden';
+        document.getElementById("event_day").style.visibility = 'hidden';
+        document.getElementById("event_hour").style.visibility = 'hidden';
+        document.getElementById("event_minute").style.visibility = 'hidden';
+        document.getElementById("event_category").style.visibility = 'hidden';
+
+        document.getElementById("addEvent").style.visibility = 'hidden';
+
+        document.getElementById("showUpdateForms").style.visibility = 'hidden';
+
+        document.getElementById("old_title").style.visibility = 'hidden';
+        document.getElementById("new_title").style.visibility = 'hidden';
+        document.getElementById("new_month").style.visibility = 'hidden';
+        document.getElementById("new_day").style.visibility = 'hidden';
+        document.getElementById("new_hour").style.visibility = 'hidden';
+        document.getElementById("new_minute").style.visibility = 'hidden';
+        document.getElementById("new_category").style.visibility = 'hidden';
+
+        document.getElementById("updateEvent").style.visibility = 'hidden';
+        document.getElementById("delete_title").style.visibility = 'hidden';
+        document.getElementById("deleteEvent").style.visibility = 'hidden';
+        document.getElementById("displayEvent").style.visibility = 'hidden';
+        document.getElementById("share_user").style.visibility = 'hidden';
+        document.getElementById("share_title").style.visibility = 'hidden';
+        document.getElementById("shareEvent").style.visibility = 'hidden';
+        document.getElementById("viewByCategory").style.visibility = 'hidden';
+        document.getElementById("filter").style.visibility = 'hidden';
+        document.getElementById("viewAll").style.visibility = 'hidden';
+
+        document.getElementById("group_member_1").style.visibility = 'hidden';
+        document.getElementById("group_member_2").style.visibility = 'hidden';
+        document.getElementById("group_member_3").style.visibility = 'hidden';
+        document.getElementById("group_member_4").style.visibility = 'hidden';
+        document.getElementById("group_member_5").style.visibility = 'hidden';
+        document.getElementById("createGroupEvent").style.visibility = 'hidden';
+
+        document.getElementById("nextMonth").style.visibility = 'hidden';
+        document.getElementById("lastMonth").style.visibility = 'hidden';
+        document.getElementById("calendar").innerHTML = "";  // clear all
+
+
+    }   
+
+
+
+    function addEvent(event){
+
+    // get the information of new event
+    var username = document.getElementById("username").value; 
+    var event_title = document.getElementById("event_title").value; 
+    var event_month = document.getElementById("event_month").value; 
+    var event_day = document.getElementById("event_day").value; 
+    var event_hour = document.getElementById("event_hour").value; 
+    var event_minute = document.getElementById("event_minute").value; 
+    var event_category = document.getElementById("event_category").value; 
+    var dataString = "username=" + encodeURIComponent(username) + "&event_title=" + encodeURIComponent(event_title)+ "&event_month=" + encodeURIComponent(event_month)+ "&event_day=" + encodeURIComponent(event_day)+ "&event_hour=" + encodeURIComponent(event_hour)+ "&event_minute=" + encodeURIComponent(event_minute)+ "&event_category=" + encodeURIComponent(event_category);
+
+    var xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/addEvent.php", true); 
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+    xmlHttp.addEventListener("load", function(event){
+        var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+        if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData 
+        alert("Event has been saved!");
+        reload();
+        clear();
+    }
+    else if(jsonData.blank){ 
+        alert("Please enter valid information");
+    }
+    else{
+        alert(jsonData.message);
+    }
+    }, false); // Bind the callback to the load event
+    xmlHttp.send(dataString); // Send the data
+}
+
+function groupEvent(event){
+
+    // get the names of group members
+    var group_member_1 = document.getElementById("group_member_1").value; 
+    var group_member_2 = document.getElementById("group_member_2").value; 
+    var group_member_3 = document.getElementById("group_member_3").value; 
+    var group_member_4 = document.getElementById("group_member_4").value; 
+    var group_member_5 = document.getElementById("group_member_5").value; 
+    
+    //get the information of group event
+    var event_title = document.getElementById("event_title").value; 
+    var event_month = document.getElementById("event_month").value; 
+    var event_day = document.getElementById("event_day").value; 
+    var event_hour = document.getElementById("event_hour").value; 
+    var event_minute = document.getElementById("event_minute").value; 
+    var event_category = document.getElementById("event_category").value; 
+    var dataString = "&group_member_1=" + encodeURIComponent(group_member_1) +"&group_member_2=" + encodeURIComponent(group_member_2) +"&group_member_3=" + encodeURIComponent(group_member_3) +"&group_member_4=" + encodeURIComponent(group_member_4) +"&group_member_5=" + encodeURIComponent(group_member_5) + "&event_title=" + encodeURIComponent(event_title)+ "&event_month=" + encodeURIComponent(event_month)+ "&event_day=" + encodeURIComponent(event_day)+ "&event_hour=" + encodeURIComponent(event_hour)+ "&event_minute=" + encodeURIComponent(event_minute)+ "&event_category=" + encodeURIComponent(event_category);
+
+    var xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/groupEvent.php", true); 
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+    xmlHttp.addEventListener("load", function(event){
+        var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+        if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+        alert("Event has been saved!");
+        reload();
+    }
+    else if(jsonData.blank){ 
+        alert("Please enter valid information");
+    }
+    else{
+        alert(jsonData.message);
+    }
+    }, false); // Bind the callback to the load event
+    xmlHttp.send(dataString); // Send the data
+}
+
+
+
+function displayEvent(event){
+
+    var xmlHttp = new XMLHttpRequest();
+    var username = document.getElementById("username").value;
+    var dataString2 = "username=" + encodeURIComponent(username);
+    xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/displayEvent.php", true); 
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xmlHttp.addEventListener("load", function(event){
+        jsonData = JSON.parse(event.target.responseText);  // parse the JSON into a JavaScript object
+        
+        for(var a=0; a<jsonData.length; a++){    // iterate over the jason Data array
+                for(var i=0; i<=31; i++){        // if matches the day 
+                   intvalue = parseInt(jsonData[a].event_day);
+                   intValue2 =parseInt(jsonData[a].event_month);
+
+                    if((intvalue === i) &&(intValue2 === currentMonth.month)){  //if matches day and month, show details 
+                        document.getElementById(intvalue).innerHTML=(intvalue+"<br> "+"Title:"+" "+jsonData[a].event_title+"<br>"+"Time:"+" "+jsonData[a].event_hour+":"+jsonData[a].event_minute+":"+jsonData[a].event_category);
+                        document.getElementById(intvalue).setAttribute("style", "background-color: pink ;" ); // put pink background
+
+                    }
+
+
+                }
+            }  
+
+
+        }, false); 
+xmlHttp.send(dataString2);  
+}
+
+
+function categoryEvent(event){
+
+
+    var xmlHttp = new XMLHttpRequest();
+    var username = document.getElementById("username").value;
+    var category = document.getElementById("viewByCategory").value;
+    var dataString2 = "username=" + encodeURIComponent(username);
+    xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/displayEvent.php", true); 
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xmlHttp.addEventListener("load", function(event){
+        jsonData = JSON.parse(event.target.responseText); 
+
+            for(var a=0; a<jsonData.length; a++){   // iterate over the jason Data array
+                for(var i=0; i<31; i++){        // if matches the day 
+                   intvalue = parseInt(jsonData[a].event_day);
+                   intValue2 =parseInt(jsonData[a].event_month);
+                    if((intvalue === i) &&(intValue2 === currentMonth.month)){   //if matches day and month, show details 
+                        if(category==jsonData[a].event_category)   // if matches the category, show details
+                        {
+                            document.getElementById(intvalue).innerHTML=(intvalue+"<br> "+"Title:"+" "+jsonData[a].event_title+"<br>"+"Time:"+" "+jsonData[a].event_hour+":"+jsonData[a].event_minute+" "+jsonData[a].event_category);
+                            document.getElementById(intvalue).setAttribute("style", "background-color: pink ;" );
+                        }
+                        else   // if not match, clear the tag
+                        {  
+                            document.getElementById(intvalue).innerHTML= intvalue;
+                            document.getElementById(intvalue).setAttribute("style", "background-color: white ;" );
+                        }   
+                    }
+                }
+            } 
+
+
+
+        }, false); 
+xmlHttp.send(dataString2);  
+}
+
+function showUpdateForms(event){
+                // show all the forms for editing
+                document.getElementById("old_title").style.visibility = 'visible';
+                document.getElementById("new_title").style.visibility = 'visible';
+                document.getElementById("new_month").style.visibility = 'visible';
+                document.getElementById("new_day").style.visibility = 'visible';
+                document.getElementById("new_hour").style.visibility = 'visible';
+                document.getElementById("new_minute").style.visibility = 'visible';
+                document.getElementById("new_category").style.visibility = 'visible';
+                document.getElementById("updateEvent").style.visibility = 'visible';
+
+            }
+
+            function updateEvent(event){
+
+    // get the edited information
+    var username = document.getElementById("username").value; 
+    var old_title = document.getElementById("old_title").value; 
+    var new_title = document.getElementById("new_title").value; 
+    var new_month = document.getElementById("new_month").value; 
+    var new_day = document.getElementById("new_day").value; 
+    var new_hour = document.getElementById("new_hour").value; 
+    var new_minute = document.getElementById("new_minute").value; 
+    var new_category = document.getElementById("new_category").value; 
+    var dataString = "username=" + encodeURIComponent(username) + "&old_title=" + encodeURIComponent(old_title)+"&new_title=" + encodeURIComponent(new_title)+ "&new_month=" + encodeURIComponent(new_month)+ "&new_day=" + encodeURIComponent(new_day)+ "&new_hour=" + encodeURIComponent(new_hour)+ "&new_minute=" + encodeURIComponent(new_minute)+"&new_category=" + encodeURIComponent(new_category);
+
+    var xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/updateEvent.php", true); 
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+    xmlHttp.addEventListener("load", function(event){
+        var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+        if(jsonData.success){  
+            alert("Event has been saved!");
+            //after editing, hidden the forms and buttons
+            document.getElementById("old_title").style.visibility = 'hidden';
+            document.getElementById("new_title").style.visibility = 'hidden';
+            document.getElementById("new_month").style.visibility = 'hidden';
+            document.getElementById("new_day").style.visibility = 'hidden';
+            document.getElementById("new_hour").style.visibility = 'hidden';
+            document.getElementById("new_minute").style.visibility = 'hidden';
+            document.getElementById("new_category").style.visibility = 'hidden';
+            document.getElementById("updateEvent").style.visibility = 'hidden';
+            reload();
+        }
+        else if(jsonData.blank){ 
+            alert("how?");
+        }
+        else{
+            alert(jsonData.message);
+        }
+    }, false); // Bind the callback to the load event
+    xmlHttp.send(dataString); // Send the data
+
+}
+
+function shareEvent(event){
+
+    //get the input information
+    var username = document.getElementById("username").value; 
+    var share_user = document.getElementById("share_user").value; 
+    var share_title = document.getElementById("share_title").value; 
+    
+    var dataString = "username=" + encodeURIComponent(username) + "&share_user=" + encodeURIComponent(share_user)+"&share_title=" + encodeURIComponent(share_title);
+
+    var xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/shareEvent.php", true); 
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+    xmlHttp.addEventListener("load", function(event){
+        var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+        if(jsonData.success){  
+            alert("Event has been shared!");
+        }
+        else if(jsonData.blank){ 
+            alert("how?");
+        }
+        else{
+            alert(jsonData.message);
+        }
+    }, false); // Bind the callback to the load event
+    xmlHttp.send(dataString); // Send the data
+
+}
+
+
+
+function deleteEvent(event){
+
+    //get the information about event user wants to delete
+    var username = document.getElementById("username").value; 
+    var delete_title = document.getElementById("delete_title").value; 
+    
+    var dataString = "username=" + encodeURIComponent(username) + "&delete_title=" + encodeURIComponent(delete_title);
+
+    var xmlHttp = new XMLHttpRequest(); 
+    xmlHttp.open("POST", "http://ec2-54-175-101-121.compute-1.amazonaws.com/javaScript/deleteEvent.php", true); 
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+    xmlHttp.addEventListener("load", function(event){
+        var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+        if(jsonData.success){  
+            alert("Event has been deleted!");
+            reload();
+            
+        }
+        else if(jsonData.blank){ 
+            alert("how?");
+        }
+        else{
+            alert(jsonData.message);
+        }
+    }, false); // Bind the callback to the load event
+    xmlHttp.send(dataString); // Send the data
+
+}
+
+    function reload()   // after changing the calendar, reload it
+    {
+      document.getElementById("calendar").innerHTML = "";  // clear all
+      CreateCalendar(currentMonth);  // rebuild the calendar
+      displayEvent();  // redisplay the events
+      clear();
+
+
+  }
+
+    function nextMonth()  // jump to next month
+    {
+      document.getElementById("calendar").innerHTML = "";
+      currentMonth = currentMonth.nextMonth();
+      CreateCalendar(currentMonth);
+  }
+
+     function lastMonth()  // jump to previous month
+     {
+      document.getElementById("calendar").innerHTML = "";
+      currentMonth = currentMonth.prevMonth();
+      CreateCalendar(currentMonth);
+  }
+
+  function CreateCalendar(currentMonth)
+  {
+    var Today = new Date();
+    var insideTable = document.createElement("table");  // inside table
+    var outsideTable =  document.getElementById("calendar"); // outside table on html page
+    var insideBody = document.createElement("tbody");  // body of inside table
+    
+    currentMonth = currentMonth.prevMonth(); 
+    var firstDayInstance = new Date(currentMonth.year, currentMonth.month, 1); // get first day object
+    var firstDay = firstDayInstance.getDay();  // get the days of first day in week
+    var MonthName = getMonthName(currentMonth.month); // get month name
+    var monthLength = getMonthLength(currentMonth.month); // get length of month
+    
+    var dateHeaderRow = document.createElement("tr");  // head row, containing the current month 
+    var dateHeaderCell = document.createElement("td");
+    var dateHeaderText = document.createTextNode(MonthName+" "+currentMonth.year);
+    dateHeaderCell.appendChild(dateHeaderText);  // append the string to row, append row to table
+    dateHeaderRow.appendChild(dateHeaderCell);
+    dateHeaderRow.setAttribute("align", "center");
+
+    var part1WeekDay = document.createElement("tr");  // create row of week day
+    var Sund = document.createElement("td");
+    var SundText = document.createTextNode("Sunday");  // append Sunday to row of week day
+    Sund.appendChild(SundText);
+    var Mon = document.createElement("td");
+    var MonText = document.createTextNode("Monday");// append Monday to row of week day
+    Mon.appendChild(MonText);
+    var Tue = document.createElement("td");
+    var TueText = document.createTextNode("Tuesday");// append Tuesday to row of week day
+    Tue.appendChild(TueText);
+    var Wed = document.createElement("td");
+    var WedText = document.createTextNode("Wednesday");// append Wednesday to row of week day
+    Wed.appendChild(WedText);
+    var Thu = document.createElement("td");
+    var ThuText = document.createTextNode("Thursday");// append Thursday to row of week day
+    Thu.appendChild(ThuText);
+    var Fri = document.createElement("td");
+    var FriText = document.createTextNode("Friday");// append Friday to row of week day
+    Fri.appendChild(FriText);
+    var Sat = document.createElement("td");
+    var SatText = document.createTextNode("Saturday");// append Saturday to row of week day
+    Sat.appendChild(SatText);
+    
+    // append Saturday -- Saturday to row of week day
+    part1WeekDay.appendChild(Sund);
+    part1WeekDay.appendChild(Mon);
+    part1WeekDay.appendChild(Tue);
+    part1WeekDay.appendChild(Wed);
+    part1WeekDay.appendChild(Thu);
+    part1WeekDay.appendChild(Fri);
+    part1WeekDay.appendChild(Sat);
+
+    part1WeekDay.setAttribute("align", "center");
+    part1WeekDay.setAttribute("width", "300");
+    part1WeekDay.setAttribute("height", "30");
+    
+
+    var dayIndex =1;
+    var tableStart = 0;
+    //var firstDay = 4;
+    part2FirstRow = document.createElement("tr");
+    for(var i=0;i<7;i++)  // iterate over the first row of this month
+    {  
+        var firstRowCell = document.createElement("td");
+        if(i<firstDay)
+            {firstRowText = document.createTextNode(" ");} // if before firstday of this month, let it be blank
+        else
+        {
+                 firstRowText = document.createTextNode(dayIndex); // if after firstday of this month, let it be index of days
+                firstRowCell.setAttribute("id",dayIndex);
+                dayIndex++;
+            }
+
+        firstRowCell.appendChild(firstRowText);   // append the grid into table of calendar
+        part2FirstRow.appendChild(firstRowCell);
+        part2FirstRow.setAttribute("align", "center");
+    }
+    
+    insideBody.appendChild(dateHeaderRow);
+    insideBody.appendChild(part1WeekDay);
+    insideBody.appendChild(part2FirstRow);
+
+    for(var j=0;j<4;j++)    // iterate over the rest rows of this month
+    {   
+        part2otherRow = document.createElement("tr");
+        for(var k=0;k<7;k++)
+        {  
+           var otherRowCell = document.createElement("td");
+           if(dayIndex>monthLength)
+                { otherRowText = document.createTextNode(" ");}  // if after end day of this month, let it be blank
+            else
+            {
+                  otherRowText = document.createTextNode(dayIndex); // put numbers into the grid corresponding to days
+                otherRowCell.setAttribute("id",dayIndex);
+                  if ((dayIndex === Today.getDate()) && (Today.getMonth() === currentMonth.month))  // if it is today, make it color:Lime
+                  {
+                    otherRowCell.setAttribute("style", "background-color: Lime ;" );
+                }
+                dayIndex++;
+            }
+
+            otherRowCell.appendChild(otherRowText);  // put the calendar to big table of html
+            part2otherRow.appendChild(otherRowCell);
+            part2otherRow.setAttribute("align", "center");
+        }
+        insideBody.appendChild(part2otherRow);
+
+    }
+    
+
+    insideTable.appendChild(insideBody);
+    outsideTable.appendChild(insideTable);
+
+    displayEvent();
+
+}
+
+
+
+
+(function () {
+  "use strict";
+
+    /* Date.prototype.deltaDays(n)
+     * 
+     * Returns a Date object n days in the future.
+     */
+     Date.prototype.deltaDays = function (n) {
+        // relies on the Date object to automatically wrap between months for us
+        return new Date(this.getFullYear(), this.getMonth(), this.getDate() + n);
+    };
+
+    /* Date.prototype.getSunday()
+     * 
+     * Returns the Sunday nearest in the past to this date (inclusive)
+     */
+     Date.prototype.getSunday = function () {
+        return this.deltaDays(-1 * this.getDay());
+     };
+    }());
+
+/** Week
+ * 
+ * Represents a week.
+ * 
+ * Functions (Methods):
+ *  .nextWeek() returns a Week object sequentially in the future
+ *  .prevWeek() returns a Week object sequentially in the past
+ *  .contains(date) returns true if this week's sunday is the same
+ *      as date's sunday; false otherwise
+ *  .getDates() returns an Array containing 7 Date objects, each representing
+ *      one of the seven days in this month
+ */
+ function Week(initial_d) {
+    "use strict";
+
+    this.sunday = initial_d.getSunday();
+
+
+    this.nextWeek = function () {
+        return new Week(this.sunday.deltaDays(7));
+    };
+
+    this.prevWeek = function () {
+        return new Week(this.sunday.deltaDays(-7));
+    };
+
+    this.contains = function (d) {
+        return (this.sunday.valueOf() === d.getSunday().valueOf());
+    };
+
+    this.getDates = function () {
+        var dates = [];
+        for(var i=0; i<7; i++){
+            dates.push(this.sunday.deltaDays(i));
+        }
+        return dates;
+    };
+ }
+
+/** Month
+ * 
+ * Represents a month.
+ * 
+ * Properties:
+ *  .year == the year associated with the month
+ *  .month == the month number (January = 0)
+ * 
+ * Functions (Methods):
+ *  .nextMonth() returns a Month object sequentially in the future
+ *  .prevMonth() returns a Month object sequentially in the past
+ *  .getDateObject(d) returns a Date object representing the date
+ *      d in the month
+ *  .getWeeks() returns an Array containing all weeks spanned by the
+ *      month; the weeks are represented as Week objects
+ */
+ function Month(year, month) {
+    "use strict";
+
+    this.year = year;
+    this.month = month;
+
+    this.nextMonth = function () {
+        return new Month( year + Math.floor((month+1)/12), (month+1) % 12);
+    };
+
+    this.prevMonth = function () {
+        return new Month( year + Math.floor((month-1)/12), (month+11) % 12);
+    };
+
+    this.getDateObject = function(d) {
+        return new Date(this.year, this.month, d);
+    };
+
+    this.getWeeks = function () {
+        var firstDay = this.getDateObject(1);
+        var lastDay = this.nextMonth().getDateObject(0);
+
+        var weeks = [];
+        var currweek = new Week(firstDay);
+        weeks.push(currweek);
+        while(!currweek.contains(lastDay)){
+            currweek = currweek.nextWeek();
+            weeks.push(currweek);
+        }
+
+        return weeks;
+    };
+ }
+
+ function getMonthLength(month, year) {
+    var ar = new Array(12);
+    ar[0] = 31; // January
+    ar[1] = 28; // February
+    ar[2] = 31; // March
+    ar[3] = 30; // April
+    ar[4] = 31; // May
+    ar[5] = 30; // June
+    ar[6] = 31; // July
+    ar[7] = 31; // August
+    ar[8] = 30; // September
+    ar[9] = 31; // October
+    ar[10] = 30; // November
+    ar[11] = 31; // December
+    return ar[month];
+}
+// Convert JS month numbers into English month names
+function getMonthName(month) {
+    var ar = new Array(12);
+    ar[0] = "January";
+    ar[1] = "February";
+    ar[2] = "March";
+    ar[3] = "April";
+    ar[4] = "May";
+    ar[5] = "June";
+    ar[6] = "July";
+    ar[7] = "August";
+    ar[8] = "September";
+    ar[9] = "October";
+    ar[10] = "November";
+    ar[11] = "December";
+    return ar[month];
+}
+
+
+
+</script>
+</body>
+
+</html>
